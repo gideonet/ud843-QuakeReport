@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,18 +45,73 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         //Find the earthquake at the given position in the list of earthquakes
         Earthquake currentEarthquake = getItem(position);
 
-        //Find the TextView with view ID magnitude
+                //Find the TextView with view ID magnitude
         TextView magnitudeView = (TextView) listItemView.findViewById(R.id.magnitude);
         //Display the magnitude of the current eathquake in that TextView
-        magnitudeView.setText(currentEarthquake.getMagnitude());
+        String formattedMagnitude = formatMagnitude(currentEarthquake.getMagnitude());
+        magnitudeView.setText(formattedMagnitude);
+
+        String location = new String(currentEarthquake.getLocation());
+
+        TextView distanceView =(TextView) listItemView.findViewById(R.id.distance);
+        String formattedDistance = formatDistance(location);
+        distanceView.setText(formattedDistance);
 
         TextView locationView =(TextView) listItemView.findViewById(R.id.location);
-        locationView.setText(currentEarthquake.getLocation());
+        String formattedLocation = formatLocation(location);
+        locationView.setText(formattedLocation);
+
+        // Create a new Date object from the time in milliseconds of the earthquake
+        Date dateObject = new Date(currentEarthquake.getTimeInMilliseconds());
 
         TextView dateView = (TextView) listItemView.findViewById(R.id.date);
-        dateView.setText(currentEarthquake.getDate());
+        String formattedDate = formatDate(dateObject);
+        dateView.setText(formattedDate);
+
+        TextView timeView = (TextView) listItemView.findViewById(R.id.time);
+        String formattedTime = formatTime(dateObject);
+        timeView.setText(formattedTime);
 
         return listItemView;
+    }
+
+    /**
+     * Return the formatted date string (e.g. "Mar 3, 1984") from a Date object
+     * @param dateObject
+     * @return
+     */
+    private String formatDate(Date dateObject) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("LLL dd, yyy");
+        return dateFormat.format(dateObject);
+    }
+
+    /**
+     * Return the formatted date string (i.e. "4:30 PM") from a Date object
+     * @param dateObject
+     * @return
+     */
+    private String formatTime(Date dateObject){
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
+        return timeFormat.format(dateObject);
+    }
+
+    private String formatDistance(String location){
+        String mlocation = location;
+        String[] parts = mlocation.split("(?<=f)");
+        String part1 = parts[0];
+        return part1;
+    }
+
+    private String formatLocation(String location){
+        String mlocation = location;
+        String[] parts = mlocation.split("(?<=f)");
+        String part2 = parts[1].trim();
+        return part2;
+    }
+
+    private String formatMagnitude(double magnitude){
+        DecimalFormat magnitudeFormat = new DecimalFormat("0.0");
+        return magnitudeFormat.format(magnitude);
     }
 
 }
