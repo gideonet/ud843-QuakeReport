@@ -61,7 +61,10 @@ public final class QueryUtils {
                 double mag = properties.getDouble("mag");
                 String place = properties.getString("place");
                 long time = properties.getLong("time");
-                earthquakes.add(new Earthquake(mag,place,time));
+                // Extract the value for the key called "url"
+                String url = properties.getString("url");
+
+                earthquakes.add(new Earthquake(mag,place,time,url));
             }
 
         } catch (JSONException e) {
